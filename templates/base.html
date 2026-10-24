@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>StockFlow</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+</head>
+<body class="bg-slate-950 text-white flex h-screen" x-data="{ tab: 'overview', modal: null }">
+    <!-- Sidebar -->
+    <aside class="w-44 bg-slate-900 p-4 border-r border-slate-800">
+        <h1 class="font-bold text-blue-500 mb-6">StockFlow</h1>
+        <nav class="space-y-2 text-sm">
+            <button @click="tab = 'overview'" class="block w-full text-left p-2 rounded hover:bg-slate-800">Overview</button>
+            <button @click="tab = 'products'" class="block w-full text-left p-2 rounded hover:bg-slate-800">Products</button>
+            <button @click="tab = 'customers'" class="block w-full text-left p-2 rounded hover:bg-slate-800">Customers</button>
+            <button @click="tab = 'orders'" class="block w-full text-left p-2 rounded hover:bg-slate-800">Orders</button>
+        </nav>
+    </aside>
+
+    <!-- Main View -->
+    <main class="flex-1 p-6 overflow-y-auto">
+        <header class="flex justify-between items-center mb-6 pb-4 border-b border-slate-800">
+            <div x-data="{ time: '' }" x-init="setInterval(() => time = new Date().toLocaleString(), 1000)" class="text-xs text-slate-400">
+                System Time: <span x-text="time"></span>
+            </div>
+            <div class="space-x-2">
+                <button @click="modal = 'p'" class="bg-slate-800 px-3 py-1 rounded text-xs">+ Product</button>
+                <button @click="modal = 'c'" class="bg-slate-800 px-3 py-1 rounded text-xs">+ Customer</button>
+                <button @click="modal = 'o'" class="bg-blue-600 px-3 py-1 rounded text-xs">+ Order</button>
+            </div>
+        </header>
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>
