@@ -31,7 +31,7 @@
         <tr class="text-slate-500"><th>Order ID</th><th>Customer</th><th>Product</th><th>Qty</th><th>Date & Time</th><th>Total</th><th>Action</th></tr>
         {% for o in ords %}
         <tr class="border-t border-slate-800">
-            <td class="py-2">#ORD-{{ o.id }}</td><td>{{ o.customer.name if o.customer else 'N/A' }}</td><td>{{ o.product.name if o.product else 'N/A' }}</td><td>{{ o.quantity if o.quantity else 0 }}</td><td class="text-xs text-slate-300">{{ o.date.strftime('%d %b %Y, %I:%M %p') }}</td><td class="text-emerald-400 font-bold">{{ "%.2f"|format(o.total) }}</td><td><a href="/order/del/{{ o.id }}" class="text-rose-400 text-xs">Delete</a></td>
+            <td class="py-2">#ORD-{{ o.id }}</td><td>{{ o.customer.name if o.customer else 'N/A' }}</td><td>{{ o.product.name if o.product else 'N/A' }}</td><td>{{ o.quantity if o.quantity else 0 }}</td><td class="text-xs text-slate-300">{{ o.date.strftime('%d %b %Y') }}</td><td class="text-emerald-400 font-bold">{{ "%.2f"|format(o.total) }}</td><td><a href="/order/del/{{ o.id }}" class="text-rose-400 text-xs">Delete</a></td>
         </tr>
         {% endfor %}
     </table>
