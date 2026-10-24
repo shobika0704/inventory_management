@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div x-show="tab === 'overview'" class="grid grid-cols-4 gap-4 text-center text-sm">
+    <div class="bg-slate-900 p-4 rounded border border-slate-800">Products<br><b class="text-xl text-white">{{ prods|length }}</b></div>
+    <div class="bg-slate-900 p-4 rounded border border-slate-800">Low Stock (&lt;10)<br><b class="text-xl text-rose-500">{{ low }}</b></div>
+    <div class="bg-slate-900 p-4 rounded border border-slate-800">Orders<br><b class="text-xl text-emerald-400">{{ ords|length }}</b></div>
+    <div class="bg-slate-900 p-4 rounded border border-slate-800">Revenue<br><b class="text-xl text-blue-400">{{ "%.2f"|format(sales) }}</b></div>
+</div>
+
+<div x-show="tab === 'products'" class="bg-slate-900 rounded p-4 border border-slate-800">
+    <table class="w-full text-left text-sm">
+        <tr class="text-slate-500"><th>Name</th><th>Price</th><th>Stock</th><th>Action</th></tr>
+        {% for p in prods %}
+        <tr class="border-t border-slate-800"><td class="py-2">{{ p.name }}</td><td>{{ p.price }}</td><td>{{ p.stock }}</td><td><a href="/product/del/{{ p.id }}" class="text-rose-400 text-xs">Delete</a></td></tr>
+        {% endfor %}
+    </table>
+</div>
+
+<div x-show="tab === 'customers'" class="bg-slate-900 rounded p-4 border border-slate-800">
+    <table class="w-full text-left text-sm">
+        <tr class="text-slate-500"><th>Name</th><th>Phone</th><th>Action</th></tr>
+        {% for c in custs %}
+        <tr class="border-t border-slate-800"><td class="py-2">{{ c.name }}</td><td>{{ c.phone }}</td><td><a href="/customer/del/{{ c.id }}" class="text-rose-400 text-xs">Delete</a></td></tr>
+        {% endfor %}
+    </table>
+</div>
+
+<div x-show="tab === 'orders'" class="bg-slate-900 rounded p-4 border border-slate-800">
+    <table class="w-full text-left text-sm">
+        <tr class="text-slate-500"><th>Order ID</th><th>Customer</th><th>Product</th><th>Qty</th><th>Date & Time</th><th>Total</th><th>Action</th></tr>
+        {% for o in ords %}
+        <tr class="border-t border-slate-800">
+            <td class="py-2">#ORD-{{ o.id }}</td><td>{{ o.customer.name if o.customer else 'N/A' }}</td><td>{{ o.product.name if o.product else 'N/A' }}</td><td>{{ o.quantity if o.quantity else 0 }}</td><td class="text-xs text-slate-300">{{ o.date.strftime('%d %b %Y, %I:%M %p') }}</td><td class="text-emerald-400 font-bold">{{ "%.2f"|format(o.total) }}</td><td><a href="/order/del/{{ o.id }}" class="text-rose-400 text-xs">Delete</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+
+<div x-show="modal" class="fixed inset-0 bg-black/70 flex items-center justify-center p-4">
+    <div class="bg-slate-900 p-5 rounded-xl w-72 border border-slate-800 relative">
+        <button @click="modal = null" class="absolute top-2 right-3 text-slate-400">&times;</button>
+        <form x-show="modal === 'p'" action="/product/add" method="POST" class="space-y-3">
+            <h3 class="font-bold text-sm">Add Product</h3>
+            <input name="name" placeholder="Product Name" required class="w-full bg-slate-950 p-2 text-xs rounded border border-slate-800">
+            <input name="price" placeholder="Price" type="number" step="0.01" required class="w-full bg-slate-950 p-2 text-xs rounded border border-slate-800">
+            <input name="stock" placeholder="Initial Stock" type="number" required class="w-full bg-slate-950 p-2 text-xs rounded border border-slate-800">
+            <button class="bg-blue-600 w-full py-2 text-xs rounded font-medium">Save</button>
+        </form>
+        <form x-show="modal === 'c'" action="/customer/add" method="POST" class="space-y-3">
+            <h3 class="font-bold text-sm">Add Customer</h3>
+            <input name="name" placeholder="Customer Name" required class="w-full bg-slate-950 p-2 text-xs rounded border border-slate-800">
+            <input name="phone" placeholder="Phone Number" required class="w-full bg-slate-950 p-2 text-xs rounded border border-slate-800">
+            <button class="bg-emerald-600 w-full py-2 text-xs rounded font-medium">Save</button>
+        </form>
+        <form x-show="modal === 'o'" action="/order/add" method="POST" class="space-y-3">
+            <h3 class="font-bold text-sm">Create Order</h3>
+            <select name="customer_id" required class="w-full bg-slate-950 p-2 text-xs rounded border border-slate-800 text-slate-300">
+                <option value="">Select Customer</option>{% for c in custs %}<option value="{{ c.id }}">{{ c.name }}</option>{% endfor %}
+            </select>
+            <select name="product_id" required class="w-full bg-slate-950 p-2 text-xs rounded border border-slate-800 text-slate-300">
+                <option value="">Select Product</option>{% for p in prods %}<option value="{{ p.id }}">{{ p.name }}</option>{% endfor %}
+            </select>
+            <input name="qty" placeholder="Quantity" type="number" min="1" required class="w-full bg-slate-950 p-2 text-xs rounded border border-slate-800">
+            <button class="bg-blue-600 w-full py-2 text-xs rounded font-medium">Submit</button>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
