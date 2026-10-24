@@ -20,9 +20,6 @@
     <!-- Main View -->
     <main class="flex-1 p-6 overflow-y-auto">
         <header class="flex justify-between items-center mb-6 pb-4 border-b border-slate-800">
-            <div x-data="{ time: '' }" x-init="setInterval(() => time = new Date().toLocaleString(), 1000)" class="text-xs text-slate-400">
-                System Time: <span x-text="time"></span>
-            </div>
             <div class="space-x-2">
                 <button @click="modal = 'p'" class="bg-slate-800 px-3 py-1 rounded text-xs">+ Product</button>
                 <button @click="modal = 'c'" class="bg-slate-800 px-3 py-1 rounded text-xs">+ Customer</button>
